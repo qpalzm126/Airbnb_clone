@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import ReactDOM from "react-dom";
 import { Map as ReactMapGL, Marker, Popup } from "react-map-gl";
 // import * as turf from "@turf/turf";
 import { getCenter } from "geolib";
-import { MapPinIcon } from "@heroicons/react/24/solid";
+import "mapbox-gl/dist/mapbox-gl.css"; //<-- 解決 zoom 的時候 marker 跟著移動
 
 function Map({ searchResults }) {
   const [selectedLocation, setSelectedLocation] = useState({});
@@ -13,7 +14,6 @@ function Map({ searchResults }) {
   }));
 
   const center = getCenter(coordinates);
-
   const [viewport, setViewport] = useState({
     width: "100%",
     height: "100%",
@@ -22,19 +22,12 @@ function Map({ searchResults }) {
     zoom: 11,
   });
 
-  const onMove = React.useCallback(({ viewState }) => {
-    const newCenter = [viewState.longitude, viewState.latitude];
-    // Only update the view state if the center is inside the geofence
-    // if (turf.booleanPointInPolygon(newCenter, GEOFENCE)) {
-    setViewport(newCenter);
-  }, []);
-
   return (
     <ReactMapGL
       mapStyle="mapbox://styles/lilun316/clel4hdrt000901n0lu0swixw"
       mapboxAccessToken={process.env.mapbox_key}
       {...viewport}
-      onMove={onMove}
+      onMove={(evt) => setViewport(evt.viewport)}
     >
       {searchResults.map((result) => (
         <div key={result.long}>
@@ -42,14 +35,16 @@ function Map({ searchResults }) {
             <p
               role="img"
               className="cursor-pointer text-2xl animate-bounce"
-              onClick={() => setSelectedLocation(result)}
+              onClick={() => {
+                setSelectedLocation(result);
+                console.log(selectedLocation);
+              }}
               aria-label="push-pin"
             >
-              🎸
-              {/* <MapPinIcon /> */}
+              📌
             </p>
           </Marker>
-          {/* The pop uop that should show if we click on a marker */}
+          {/* The pop up that should show if we click on a marker */}
           {selectedLocation.long === result.long ? (
             <Popup
               onClose={() => setSelectedLocation({})}

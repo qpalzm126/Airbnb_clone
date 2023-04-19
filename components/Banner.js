@@ -16,7 +16,7 @@ function Banner() {
         rounded-full font-bold my-3 hover:shadow-xl active:scale-90 
         transition duration-150"
         >
-          Im Flecibe
+          Start
         </button>
       </div>
     </div>
