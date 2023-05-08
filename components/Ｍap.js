@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Map as ReactMapGL, Marker, Popup } from "react-map-gl";
 // import * as turf from "@turf/turf";
 import { getCenter } from "geolib";
-import "mapbox-gl/dist/mapbox-gl.css"; //<-- 解決 zoom 的時候 marker 跟著移動
+import "mapbox-gl/dist/mapbox-gl.css"; //fix marker location
 
 function Map({ searchResults }) {
   const [selectedLocation, setSelectedLocation] = useState({});
@@ -44,7 +44,6 @@ function Map({ searchResults }) {
               📌
             </p>
           </Marker>
-          {/* The pop up that should show if we click on a marker */}
           {selectedLocation.long === result.long ? (
             <Popup
               onClose={() => setSelectedLocation({})}
